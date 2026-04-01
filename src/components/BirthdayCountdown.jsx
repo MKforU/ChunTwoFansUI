@@ -1,13 +1,45 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useStore, siteConfig } from '../store/useStore'
+
+function TimeBlock({ value, unit, primaryColor }) {
+  const [displayValue, setDisplayValue] = useState(value)
+  const [animKey, setAnimKey] = useState(0)
+
+  useEffect(() => {
+    if (value !== displayValue) {
+      setAnimKey(prev => prev + 1)
+      setDisplayValue(value)
+    }
+  }, [value, displayValue])
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative overflow-hidden" style={{ width: '3rem', height: '2.5rem' }}>
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={animKey}
+            initial={{ y: '100%', opacity: 0, rotateX: 90 }}
+            animate={{ y: '0%', opacity: 1, rotateX: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.35 }}
+            exit={{ y: '-100%', opacity: 0, rotateX: -90 }}
+            className="absolute inset-0 flex items-center justify-center text-2xl md:text-3xl font-bold tabular-nums"
+            style={{ color: primaryColor }}
+          >
+            {String(value).padStart(2, '0')}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <span className="text-white/60 text-xs mt-1">{unit}</span>
+    </div>
+  )
+}
 
 function BirthdayCountdown() {
   const { primaryColor } = useStore()
   const [countdown, setCountdown] = useState({
     days: 0, hours: 0, minutes: 0, seconds: 0, isToday: false
   })
-  const prevRef = useRef({ days: -1, hours: -1, minutes: -1, seconds: -1 })
 
   useEffect(() => {
     const calculateCountdown = () => {
@@ -40,31 +72,6 @@ function BirthdayCountdown() {
     return () => clearInterval(timer)
   }, [])
 
-  // 对比上一次的值，只有变化时才记录
-  const prev = prevRef.current
-  const changed = {
-    days: prev.days !== countdown.days,
-    hours: prev.hours !== countdown.hours,
-    minutes: prev.minutes !== countdown.minutes,
-    seconds: prev.seconds !== countdown.seconds,
-  }
-  prevRef.current = { ...countdown }
-
-  const TimeBlock = ({ value, unit, didChange }) => (
-    <div className="flex flex-col items-center">
-      <motion.div
-        key={didChange ? value : 'static'}
-        animate={didChange ? { rotateX: [90, 0], opacity: [0, 1] } : {}}
-        transition={{ duration: 0.25 }}
-        className="text-2xl md:text-3xl font-bold tabular-nums"
-        style={{ color: primaryColor }}
-      >
-        {value}
-      </motion.div>
-      <span className="text-white/60 text-xs mt-1">{unit}</span>
-    </div>
-  )
-
   if (countdown.isToday) {
     return (
       <div className="text-center py-4">
@@ -82,10 +89,10 @@ function BirthdayCountdown() {
         距离下一个生日还有
       </p>
       <div className="flex justify-center gap-4">
-        <TimeBlock value={countdown.days} unit="天" didChange={changed.days} />
-        <TimeBlock value={countdown.hours} unit="时" didChange={changed.hours} />
-        <TimeBlock value={countdown.minutes} unit="分" didChange={changed.minutes} />
-        <TimeBlock value={countdown.seconds} unit="秒" didChange={changed.seconds} />
+        <TimeBlock value={countdown.days} unit="天" primaryColor={primaryColor} />
+        <TimeBlock value={countdown.hours} unit="时" primaryColor={primaryColor} />
+        <TimeBlock value={countdown.minutes} unit="分" primaryColor={primaryColor} />
+        <TimeBlock value={countdown.seconds} unit="秒" primaryColor={primaryColor} />
       </div>
     </div>
   )
