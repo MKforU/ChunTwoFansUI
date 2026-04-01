@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware'
 export const siteConfig = {
   name: '马猴烧酒纯儿酱🥯',
   subtitle: '@星穹练习班',
-  avatar: '/avatar.jpg',
+  avatar: './avatar.jpg',
   
   basicInfo: [
     { emoji: '🎂', label: '生日', value: '2002年2月11日' },
