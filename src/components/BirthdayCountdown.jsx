@@ -44,21 +44,31 @@ function BirthdayCountdown() {
     return () => clearInterval(timer)
   }, [])
 
-  const TimeBlock = ({ value, unit }) => (
-    <div className="flex flex-col items-center">
-      <motion.div
-        key={value}
-        initial={{ rotateX: 90, opacity: 0 }}
-        animate={{ rotateX: 0, opacity: 1 }}
-        transition={{ duration: 0.25 }}
-        className="text-2xl md:text-3xl font-bold tabular-nums"
-        style={{ color: primaryColor }}
-      >
-        {value}
-      </motion.div>
-      <span className="text-white/60 text-xs mt-1">{unit}</span>
-    </div>
-  )
+  const TimeBlock = ({ value, unit }) => {
+    const [prevValue, setPrevValue] = useState(value)
+    const [changed, setChanged] = useState(false)
+
+    if (prevValue !== value) {
+      setPrevValue(value)
+      setChanged(true)
+      // 动画结束后重置
+      setTimeout(() => setChanged(false), 250)
+    }
+
+    return (
+      <div className="flex flex-col items-center">
+        <motion.div
+          animate={changed ? { rotateX: [90, 0], opacity: [0, 1] } : {}}
+          transition={{ duration: 0.25 }}
+          className="text-2xl md:text-3xl font-bold tabular-nums"
+          style={{ color: primaryColor }}
+        >
+          {value}
+        </motion.div>
+        <span className="text-white/60 text-xs mt-1">{unit}</span>
+      </div>
+    )
+  }
 
   if (countdown.isToday) {
     return (

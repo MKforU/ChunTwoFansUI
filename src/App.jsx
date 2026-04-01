@@ -14,7 +14,7 @@ function App() {
   const { theme } = useStore()
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ChunTwoFansUI">
       <div className={`min-h-screen relative ${theme === 'dark' ? 'bg-dark' : 'bg-gray-100'}`}>
         {/* 背景效果 */}
         <div className="fixed inset-0 -z-10 overflow-hidden">

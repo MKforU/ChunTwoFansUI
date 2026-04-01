@@ -22,8 +22,8 @@ export const siteConfig = {
   ],
 
   birthday: {
-    month: 1,  // 生日月份
-    day: 1,    // 生日日期
+    month: 2,  // 2月
+    day: 11,   // 11日
   },
 
   music: {
