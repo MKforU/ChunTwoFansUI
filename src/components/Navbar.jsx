@@ -16,6 +16,7 @@ function Navbar() {
   const navigate = useNavigate()
   const { theme, toggleTheme, primaryColor } = useStore()
   const [scrolled, setScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const clickCountRef = useRef(0)
   const clickTimerRef = useRef(null)
 
@@ -131,27 +132,86 @@ function Navbar() {
             {theme === 'dark' ? '🌙' : '☀️'}
           </button>
 
-          {/* 移动端菜单 */}
-          <div className="md:hidden flex items-center gap-1">
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.path
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="p-2 rounded-lg transition-all"
-                  style={{
-                    background: isActive
-                      ? theme === 'light' ? primaryColor : 'rgba(255,255,255,0.1)'
-                      : 'transparent',
-                  }}
-                >
-                  <span className="text-lg">{link.icon}</span>
-                </Link>
-              )
-            })}
-          </div>
+          {/* 移动端菜单按钮 */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+            style={theme === 'light' ? {
+              background: 'rgba(0,0,0,0.06)',
+              border: '1px solid rgba(0,0,0,0.1)',
+            } : {
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+            }}
+          >
+            <span className="text-xl">{mobileMenuOpen ? '✕' : '☰'}</span>
+          </button>
         </div>
+
+        {/* 移动端下拉菜单 */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden mt-4 pb-4 border-t pt-4"
+            style={theme === 'light' ? {
+              borderColor: 'rgba(0,0,0,0.1)',
+            } : {
+              borderColor: 'rgba(255,255,255,0.1)',
+            }}
+          >
+            {/* 导航链接 */}
+            <div className="flex flex-col gap-2">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path
+                const isLight = theme === 'light'
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300"
+                    style={{
+                      background: isActive
+                        ? (isLight ? `linear-gradient(135deg, ${primaryColor}, #9C27B0)` : `linear-gradient(135deg, ${primaryColor}20, transparent)`)
+                        : (isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)'),
+                      border: isActive
+                        ? (isLight ? 'none' : `1px solid ${primaryColor}30`)
+                        : `1px solid ${isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)'}`,
+                      color: isActive && isLight ? '#fff' : (isLight ? '#312e81' : 'rgba(255,255,255,0.8)'),
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                  >
+                    <span className="text-xl">{link.icon}</span>
+                    <span className="text-base">{link.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* 主题切换按钮 */}
+            <button
+              onClick={() => {
+                toggleTheme()
+                setMobileMenuOpen(false)
+              }}
+              className="flex items-center gap-3 w-full px-4 py-3 mt-3 rounded-lg transition-all duration-300"
+              style={theme === 'light' ? {
+                background: 'rgba(0,0,0,0.04)',
+                border: '1px solid rgba(0,0,0,0.08)',
+                color: '#312e81',
+              } : {
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: 'rgba(255,255,255,0.8)',
+              }}
+            >
+              <span className="text-xl">{theme === 'dark' ? '🌙' : '☀️'}</span>
+              <span className="text-base">{theme === 'dark' ? '切换亮色' : '切换暗色'}</span>
+            </button>
+          </motion.div>
+        )}
       </div>
     </motion.nav>
   )
