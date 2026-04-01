@@ -12,7 +12,6 @@ const douyinWorks = [
     diggCount: 887,
     commentCount: 28,
     shareCount: 28,
-    createTime: 1774524943,
   },
   {
     id: '7608470718691676262',
@@ -22,7 +21,6 @@ const douyinWorks = [
     diggCount: 1735,
     commentCount: 15,
     shareCount: 3,
-    createTime: 1771485139,
   },
   {
     id: '7591457803786792393',
@@ -32,7 +30,6 @@ const douyinWorks = [
     diggCount: 1879,
     commentCount: 54,
     shareCount: 46,
-    createTime: 1767524010,
   },
   {
     id: '7587148592176254254',
@@ -42,7 +39,6 @@ const douyinWorks = [
     diggCount: 1001,
     commentCount: 34,
     shareCount: 26,
-    createTime: 1766557800,
   },
   {
     id: '7584070604753554715',
@@ -52,7 +48,6 @@ const douyinWorks = [
     diggCount: 1571,
     commentCount: 27,
     shareCount: 17,
-    createTime: 1765804057,
   },
   {
     id: '7578200457395314634',
@@ -62,7 +57,6 @@ const douyinWorks = [
     diggCount: 1318,
     commentCount: 13,
     shareCount: 6,
-    createTime: 1764437298,
   },
   {
     id: '7569935070317678002',
@@ -72,7 +66,6 @@ const douyinWorks = [
     diggCount: 1720,
     commentCount: 35,
     shareCount: 54,
-    createTime: 1762512857,
   },
 ]
 
@@ -98,8 +91,8 @@ function Works() {
           <p className="text-white/60">精选创作内容</p>
         </motion.div>
 
-        {/* 作品列表 */}
-        <div className="space-y-6">
+        {/* 网格布局 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {douyinWorks.map((work, index) => (
             <motion.a
               key={work.id}
@@ -108,73 +101,57 @@ function Works() {
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.08 }}
               className="block group"
             >
-              <GlassCard className="overflow-hidden transition-all duration-300 hover:scale-[1.01]">
-                <div className="flex flex-col md:flex-row">
-                  {/* 封面 */}
-                  <div className="md:w-64 flex-shrink-0 relative overflow-hidden">
-                    <img
-                      src={work.cover}
-                      alt={work.desc}
-                      className="w-full h-48 md:h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    {/* 播放图标 */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all duration-300">
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-50 group-hover:scale-100"
-                        style={{ background: 'rgba(0,0,0,0.6)' }}
-                      >
-                        <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </div>
+              <GlassCard className="overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+                {/* 封面 */}
+                <div className="relative overflow-hidden aspect-[3/4]">
+                  <img
+                    src={work.cover}
+                    alt={work.desc}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  {/* 播放按钮 */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-50 group-hover:scale-100"
+                      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+                    >
+                      <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
                     </div>
                   </div>
+                </div>
 
-                  {/* 内容 */}
-                  <div className="flex-1 p-6">
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-1 line-clamp-2">
-                          {work.desc}
-                        </h3>
-                      </div>
-                    </div>
+                {/* 信息区 */}
+                <div className="p-4">
+                  {/* 标题 */}
+                  <h3 className="text-sm font-medium text-white/90 mb-3 line-clamp-2 leading-relaxed">
+                    {work.desc}
+                  </h3>
 
-                    {/* 数据统计 */}
-                    <div className="flex items-center gap-5 text-white/60 text-sm">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#E91E63' }}>
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-                        {formatCount(work.diggCount)}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                        {formatCount(work.commentCount)}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                        {formatCount(work.shareCount)}
-                      </span>
-                    </div>
-
-                    {/* 查看按钮 */}
-                    <div className="mt-4 flex items-center gap-1 text-sm font-medium transition-colors"
-                      style={{ color: primaryColor }}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  {/* 数据统计 */}
+                  <div className="flex items-center gap-4 text-white/50 text-xs">
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#E91E63' }}>
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                       </svg>
-                      在抖音中观看
-                    </div>
+                      {formatCount(work.diggCount)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      {formatCount(work.commentCount)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                      {formatCount(work.shareCount)}
+                    </span>
                   </div>
                 </div>
               </GlassCard>

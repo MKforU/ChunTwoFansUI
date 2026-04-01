@@ -135,22 +135,18 @@ function Home() {
               <span>📊</span>
               社交数据
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-4 rounded-xl glass-dark">
-                <div className="text-2xl font-bold gradient-text">--</div>
+                <div className="text-2xl font-bold gradient-text">2,691</div>
                 <div className="text-white/60 text-sm">粉丝数</div>
               </div>
               <div className="p-4 rounded-xl glass-dark">
-                <div className="text-2xl font-bold gradient-text">--</div>
+                <div className="text-2xl font-bold gradient-text">2.0万</div>
                 <div className="text-white/60 text-sm">获赞数</div>
               </div>
               <div className="p-4 rounded-xl glass-dark">
-                <div className="text-2xl font-bold gradient-text">--</div>
+                <div className="text-2xl font-bold gradient-text">9</div>
                 <div className="text-white/60 text-sm">作品数</div>
-              </div>
-              <div className="p-4 rounded-xl glass-dark">
-                <div className="text-2xl font-bold gradient-text">--</div>
-                <div className="text-white/60 text-sm">播放量</div>
               </div>
             </div>
           </GlassCard>

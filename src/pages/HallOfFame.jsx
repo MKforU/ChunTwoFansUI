@@ -14,9 +14,36 @@ function saveData(key, data) {
   localStorage.setItem(key, JSON.stringify(data))
 }
 
+// 预置名人堂成员
+const DEFAULT_MEMBERS = [
+  {
+    id: 1,
+    nickname: 'MK学姐',
+    douyinName: 'MK学姐',
+    douyinUrl: 'https://www.douyin.com/user/MS4wLjABAAAA0BMVu6vU7Tytaxow1FVqzytz7U1TrdE-_LD0LBeTjPUTWLm32DNRzxWVCNUPaFgx',
+    avatar: '',
+    showDouyinUrl: true,
+    approved: true,
+    order: 0,
+    createdAt: '2026-04-01T00:00:00.000Z'
+  }
+]
+
+function mergeWithDefaults(saved) {
+  const merged = [...DEFAULT_MEMBERS]
+  if (saved && Array.isArray(saved)) {
+    saved.forEach(s => {
+      if (!merged.find(m => m.id === s.id)) {
+        merged.push(s)
+      }
+    })
+  }
+  return merged
+}
+
 function HallOfFame() {
   const { primaryColor } = useStore()
-  const [members, setMembers] = useState(() => loadData(HOF_KEY, []))
+  const [members, setMembers] = useState(() => mergeWithDefaults(loadData(HOF_KEY, [])))
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ nickname: '', douyinName: '', douyinUrl: '', avatar: '', showDouyinUrl: false })
   const [toast, setToast] = useState('')
