@@ -8,6 +8,7 @@ const SITE_DATA_KEY = 'fansite-site-data'
 const GALLERY_KEY = 'fansite-gallery-data'
 const WORKS_KEY = 'fansite-works-data'
 const MESSAGES_KEY = 'fansite-guestbook-messages'
+const HOF_KEY = 'fansite-halloffame'
 
 const defaultSiteData = {
   name: '{{昵称}}',
@@ -57,6 +58,12 @@ function AdminDashboard() {
   const [messagesData, setMessagesData] = useState(() => {
     try {
       const saved = localStorage.getItem(MESSAGES_KEY)
+      return saved ? JSON.parse(saved) : []
+    } catch { return [] }
+  })
+  const [hofData, setHofData] = useState(() => {
+    try {
+      const saved = localStorage.getItem(HOF_KEY)
       return saved ? JSON.parse(saved) : []
     } catch { return [] }
   })
@@ -168,6 +175,34 @@ function AdminDashboard() {
     showToast('✅ 已全部审核通过')
   }
 
+  // ============ 名人堂 ============
+  const hofApprove = (id) => {
+    const updated = hofData.map(m => m.id === id ? { ...m, approved: true } : m)
+    setHofData(updated)
+    saveData(HOF_KEY, updated)
+    showToast('✅ 已通过')
+  }
+  const hofDelete = (id) => {
+    const updated = hofData.filter(m => m.id !== id)
+    setHofData(updated)
+    saveData(HOF_KEY, updated)
+    showToast('✅ 已删除')
+  }
+  const hofUpdateField = (id, field, value) => {
+    const updated = hofData.map(m => m.id === id ? { ...m, [field]: value } : m)
+    setHofData(updated)
+    saveData(HOF_KEY, updated)
+  }
+  const hofApproveAll = () => {
+    const updated = hofData.map(m => ({ ...m, approved: true }))
+    setHofData(updated)
+    saveData(HOF_KEY, updated)
+    showToast('✅ 已全部通过')
+  }
+
+  const pendingHof = hofData.filter(m => !m.approved)
+  const approvedHof = hofData.filter(m => m.approved).sort((a, b) => (a.order || 999) - (b.order || 999))
+
   const pendingMessages = messagesData.filter(m => !m.approved)
   const approvedMessages = messagesData.filter(m => m.approved)
 
@@ -182,6 +217,7 @@ function AdminDashboard() {
     { id: 'gallery', label: '图片库', icon: '🖼️' },
     { id: 'works', label: '作品管理', icon: '🎬' },
     { id: 'messages', label: '留言审核', icon: '💬', badge: pendingMessages.length },
+    { id: 'halloffame', label: '名人堂', icon: '🏆', badge: pendingHof.length },
   ]
 
   return (
@@ -604,6 +640,149 @@ function AdminDashboard() {
                         <p className="text-white/70 text-sm">{msg.content}</p>
                       </div>
                       <button onClick={() => handleDeleteMessage(msg.id)}
+                        className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 text-xs hover:bg-red-500/30 transition-colors flex-shrink-0">
+                        删除
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* ====== 名人堂管理 ====== */}
+        {activeTab === 'halloffame' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            {/* 待审核 */}
+            <div className="rounded-2xl glass-dark p-6" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-white">⏳ 待审核 ({pendingHof.length})</h2>
+                {pendingHof.length > 0 && (
+                  <button onClick={hofApproveAll}
+                    className="px-3 py-1.5 rounded-lg text-xs text-white transition-all"
+                    style={{ background: `${primaryColor}30`, border: `1px solid ${primaryColor}60` }}>
+                    全部通过
+                  </button>
+                )}
+              </div>
+              {pendingHof.length === 0 ? (
+                <p className="text-white/40 text-sm text-center py-8">没有待审核的入驻申请 🎉</p>
+              ) : (
+                <div className="space-y-3">
+                  {pendingHof.map(m => (
+                    <div key={m.id} className="p-4 rounded-xl" style={{ background: 'rgba(233,30,99,0.08)', border: '1px solid rgba(233,30,99,0.2)' }}>
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center"
+                          style={{ background: m.avatar ? 'transparent' : `linear-gradient(135deg, ${primaryColor}, #9C27B0)` }}>
+                          {m.avatar ? (
+                            <img src={m.avatar} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-white font-bold text-lg">{m.nickname.charAt(0).toUpperCase()}</span>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-white font-medium">{m.nickname}</div>
+                          <div className="text-white/50 text-sm">🎵 {m.douyinName}</div>
+                          {m.douyinUrl && <div className="text-white/30 text-xs truncate mt-1">🔗 {m.douyinUrl}</div>}
+                          {m.avatar && <div className="text-white/30 text-xs truncate mt-0.5">📷 头像已设置</div>}
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2 mt-3">
+                        <button onClick={() => hofApprove(m.id)}
+                          className="px-4 py-1.5 rounded-lg text-xs text-white transition-all hover:opacity-80"
+                          style={{ background: `linear-gradient(135deg, ${primaryColor}, #9C27B0)` }}>
+                          ✓ 通过
+                        </button>
+                        <button onClick={() => hofDelete(m.id)}
+                          className="px-4 py-1.5 rounded-lg text-xs bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
+                          ✕ 删除
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 已通过 */}
+            <div className="rounded-2xl glass-dark p-6" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
+              <h2 className="text-lg font-semibold text-white mb-4">✅ 已通过 ({approvedHof.length})</h2>
+              {approvedHof.length === 0 ? (
+                <p className="text-white/40 text-sm text-center py-8">还没有成员</p>
+              ) : (
+                <div className="space-y-4">
+                  {approvedHof.map((m, index) => (
+                    <div key={m.id} className="flex items-start gap-4 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                      {/* 左侧信息 */}
+                      <div className="w-12 h-12 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center"
+                        style={{ background: m.avatar ? 'transparent' : `linear-gradient(135deg, ${primaryColor}, #9C27B0)` }}>
+                        {m.avatar ? (
+                          <img src={m.avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-white font-bold text-lg">{m.nickname.charAt(0).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* 昵称 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/50 text-xs w-16">昵称</span>
+                          <input value={m.nickname}
+                            onChange={e => hofUpdateField(m.id, 'nickname', e.target.value)}
+                            className="flex-1 px-2 py-1 rounded text-white text-sm focus:outline-none"
+                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
+                          />
+                        </div>
+                        {/* 抖音名 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/50 text-xs w-16">抖音名</span>
+                          <input value={m.douyinName}
+                            onChange={e => hofUpdateField(m.id, 'douyinName', e.target.value)}
+                            className="flex-1 px-2 py-1 rounded text-white text-sm focus:outline-none"
+                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
+                          />
+                        </div>
+                        {/* 抖音链接 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/50 text-xs w-16">主页链接</span>
+                          <input value={m.douyinUrl || ''}
+                            onChange={e => hofUpdateField(m.id, 'douyinUrl', e.target.value)}
+                            placeholder="https://..."
+                            className="flex-1 px-2 py-1 rounded text-white text-sm focus:outline-none"
+                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
+                          />
+                        </div>
+                        {/* 头像链接 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/50 text-xs w-16">头像</span>
+                          <input value={m.avatar || ''}
+                            onChange={e => hofUpdateField(m.id, 'avatar', e.target.value)}
+                            placeholder="https://..."
+                            className="flex-1 px-2 py-1 rounded text-white text-sm focus:outline-none"
+                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
+                          />
+                        </div>
+                        {/* 控制选项 */}
+                        <div className="flex items-center gap-4 pt-1">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm">
+                            <input type="checkbox" checked={m.showDouyinUrl || false}
+                              onChange={e => hofUpdateField(m.id, 'showDouyinUrl', e.target.checked)}
+                              className="w-4 h-4 rounded" />
+                            <span className="text-white/70">允许外显抖音主页</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/50 text-xs">排序</span>
+                            <input type="number" min={1} max={999} value={m.order || ''}
+                              onChange={e => hofUpdateField(m.id, 'order', parseInt(e.target.value) || 999)}
+                              className="w-16 px-2 py-1 rounded text-white text-sm focus:outline-none text-center"
+                              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)' }}
+                            />
+                          </div>
+                          <span className="text-white/20 text-xs">#{index + 1}</span>
+                        </div>
+                      </div>
+                      {/* 删除 */}
+                      <button onClick={() => hofDelete(m.id)}
                         className="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 text-xs hover:bg-red-500/30 transition-colors flex-shrink-0">
                         删除
                       </button>

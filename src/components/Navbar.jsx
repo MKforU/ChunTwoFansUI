@@ -7,6 +7,7 @@ const navLinks = [
   { path: '/', label: '首页', icon: '🏠' },
   { path: '/gallery', label: '图片库', icon: '🖼️' },
   { path: '/works', label: '作品', icon: '🎬' },
+  { path: '/halloffame', label: '名人堂', icon: '🏆' },
   { path: '/guestbook', label: '留言', icon: '💬' },
 ]
 

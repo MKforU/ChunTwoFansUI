@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Gallery from './pages/Gallery'
 import Works from './pages/Works'
 import Guestbook from './pages/Guestbook'
+import HallOfFame from './pages/HallOfFame'
 import MusicPlayer from './components/MusicPlayer'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
@@ -38,6 +39,7 @@ function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/works" element={<Works />} />
             <Route path="/guestbook" element={<Guestbook />} />
+            <Route path="/halloffame" element={<HallOfFame />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>
