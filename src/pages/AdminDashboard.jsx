@@ -10,23 +10,15 @@ const WORKS_KEY = 'fansite-works-data'
 const MESSAGES_KEY = 'fansite-guestbook-messages'
 const HOF_KEY = 'fansite-halloffame'
 
+import { siteConfig } from '../store/useStore'
+
 const defaultSiteData = {
-  name: '{{昵称}}',
-  subtitle: '{{简介描述}}',
-  avatar: '/avatar.jpg',
-  basicInfo: [
-    { emoji: '🎂', label: '生日', value: '{{生日信息}}' },
-    { emoji: '📏', label: '身高', value: '{{身高信息}}' },
-    { emoji: '💼', label: '职业', value: '{{职业信息}}' },
-    { emoji: '📍', label: '所在地', value: '{{所在地}}' },
-  ],
-  socialLinks: [
-    { name: '抖音', url: '#', icon: 'douyin' },
-    { name: 'B站', url: '#', icon: 'bilibili' },
-    { name: '微博', url: '#', icon: 'weibo' },
-    { name: '小红书', url: '#', icon: 'xiaohongshu' },
-  ],
-  birthday: { month: 1, day: 1 }
+  name: siteConfig.name,
+  subtitle: siteConfig.subtitle,
+  avatar: siteConfig.avatar,
+  basicInfo: siteConfig.basicInfo,
+  socialLinks: siteConfig.socialLinks,
+  birthday: siteConfig.birthday,
 }
 
 const emojiOptions = ['🎂', '📏', '💼', '📍', '⭐', '🎵', '🎮', '📚', '💬', '🌍', '❤️', '🐱', '🎨', '📸', '🌈']
