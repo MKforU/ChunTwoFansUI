@@ -16,9 +16,12 @@ function App() {
 
   return (
     <HashRouter>
-      <div className={`min-h-screen relative ${theme === 'dark' ? 'bg-dark' : 'bg-gray-100'}`}>
+      <div className={`min-h-screen relative ${theme === 'light' ? 'bg-[#e8e6f0]' : 'bg-dark'}`} data-theme={theme}>
         {/* 背景效果 */}
-        <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div
+          className="fixed inset-0 -z-10 overflow-hidden"
+          style={{ opacity: theme === 'light' ? 0.1 : 0.3 }}
+        >
           <div 
             className="absolute inset-0 opacity-30"
             style={{
