@@ -67,8 +67,8 @@ function Navbar() {
                   to={link.path}
                   className="relative px-4 py-2 rounded-lg transition-all duration-300"
                   style={{
-                    color: isActive ? 'transparent' : 'rgba(255,255,255,0.8)',
-                    background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    background: isActive ? `linear-gradient(135deg, ${primaryColor}20, transparent)` : 'transparent',
+                    border: isActive ? `1px solid ${primaryColor}30` : '1px solid transparent',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
@@ -81,23 +81,16 @@ function Navbar() {
                     }
                   }}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute inset-0 rounded-lg"
-                      style={{
-                        background: `linear-gradient(135deg, ${primaryColor}40, transparent)`,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    <span>{link.icon}</span>
-                    <span style={isActive ? {
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-base">{link.icon}</span>
+                    <span className="text-sm" style={isActive ? {
                       background: `linear-gradient(135deg, ${primaryColor}, #9C27B0, #B71C1C)`,
                       WebkitBackgroundClip: 'text',
                       backgroundClip: 'text',
                       color: 'transparent',
-                    } : {}}>
+                    } : {
+                      color: 'rgba(255,255,255,0.8)'
+                    }}>
                       {link.label}
                     </span>
                   </span>
