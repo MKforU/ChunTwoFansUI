@@ -3,22 +3,19 @@ import { persist } from 'zustand/middleware'
 
 // 配置信息（可替换）
 export const siteConfig = {
-  name: '{{昵称}}',
-  subtitle: '{{简介描述}}',
+  name: '马猴烧酒纯儿酱🥯',
+  subtitle: '@星穹练习班',
   avatar: '/avatar.jpg',
   
   basicInfo: [
     { emoji: '🎂', label: '生日', value: '2002年2月11日' },
-    { emoji: '📏', label: '身高', value: '{{身高信息}}' },
-    { emoji: '💼', label: '职业', value: '{{职业信息}}' },
-    { emoji: '📍', label: '所在地', value: '{{所在地}}' },
+    { emoji: '🎬', label: '作品', value: '9' },
+    { emoji: '❤️', label: '获赞', value: '2.0万' },
+    { emoji: '👥', label: '粉丝', value: '2691' },
   ],
 
   socialLinks: [
-    { name: '抖音', url: '#', icon: 'douyin' },
-    { name: 'B站', url: '#', icon: 'bilibili' },
-    { name: '微博', url: '#', icon: 'weibo' },
-    { name: '小红书', url: '#', icon: 'xiaohongshu' },
+    { name: '抖音', url: 'https://www.douyin.com/user/MS4wLjABAAAAHOVtxcxM99O16nn4WCfyniXigItbmbr75gHDssomtDI', icon: 'douyin' },
   ],
 
   birthday: {
