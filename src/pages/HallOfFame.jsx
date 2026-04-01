@@ -18,7 +18,7 @@ function HallOfFame() {
   const { primaryColor } = useStore()
   const [members, setMembers] = useState(() => loadData(HOF_KEY, []))
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ nickname: '', douyinName: '', douyinUrl: '', avatar: '' })
+  const [form, setForm] = useState({ nickname: '', douyinName: '', douyinUrl: '', avatar: '', showDouyinUrl: false })
   const [toast, setToast] = useState('')
 
   // 只显示已审核通过的成员
@@ -41,7 +41,7 @@ function HallOfFame() {
       douyinName: form.douyinName.trim(),
       douyinUrl: form.douyinUrl.trim(),
       avatar: form.avatar.trim(),
-      showDouyinUrl: false,
+      showDouyinUrl: form.showDouyinUrl,
       approved: false,
       order: 999,
       createdAt: new Date().toISOString()
@@ -50,7 +50,7 @@ function HallOfFame() {
     const updated = [...members, newMember]
     setMembers(updated)
     saveData(HOF_KEY, updated)
-    setForm({ nickname: '', douyinName: '', douyinUrl: '', avatar: '' })
+    setForm({ nickname: '', douyinName: '', douyinUrl: '', avatar: '', showDouyinUrl: false })
     setShowForm(false)
     showToast('🎉 申请已提交，等待管理员审核')
   }
@@ -243,6 +243,15 @@ function HallOfFame() {
                     style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
                   />
                   <p className="text-white/30 text-xs mt-1">需管理员审核后才可能对外展示</p>
+                  <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.showDouyinUrl}
+                      onChange={e => setForm({ ...form, showDouyinUrl: e.target.checked })}
+                      className="w-4 h-4 rounded"
+                    />
+                    <span className="text-white/60 text-sm">允许对外展示我的抖音主页</span>
+                  </label>
                 </div>
 
                 <div>

@@ -212,13 +212,18 @@ function AdminDashboard() {
   const smallInputClass = "px-3 py-2 rounded-lg text-white text-sm focus:outline-none"
   const smallInputStyle = { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }
 
-  const tabs = [
-    { id: 'site', label: '站点信息', icon: '🏠' },
-    { id: 'gallery', label: '图片库', icon: '🖼️' },
-    { id: 'works', label: '作品管理', icon: '🎬' },
-    { id: 'messages', label: '留言审核', icon: '💬', badge: pendingMessages.length },
-    { id: 'halloffame', label: '名人堂', icon: '🏆', badge: pendingHof.length },
-  ]
+const tabsConfig = [
+  { id: 'site', label: '站点信息', icon: '🏠' },
+  { id: 'gallery', label: '图片库', icon: '🖼️' },
+  { id: 'works', label: '作品管理', icon: '🎬' },
+  { id: 'messages', label: '留言审核', icon: '💬' },
+  { id: 'halloffame', label: '名人堂', icon: '🏆' },
+]
+
+  const tabBadges = {
+    messages: pendingMessages.length,
+    halloffame: pendingHof.length,
+  }
 
   return (
     <div className="min-h-screen px-4 py-8 pb-32">
@@ -256,7 +261,7 @@ function AdminDashboard() {
 
         {/* Tab 导航 */}
         <div className="flex gap-2 mb-8 flex-wrap">
-          {tabs.map(tab => (
+          {tabsConfig.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -269,10 +274,10 @@ function AdminDashboard() {
             >
               <span>{tab.icon}</span>
               <span>{tab.label}</span>
-              {tab.badge > 0 && (
+              {(tabBadges[tab.id] || 0) > 0 && (
                 <span className="px-1.5 py-0.5 rounded-full text-xs text-white"
                   style={{ background: '#E91E63' }}>
-                  {tab.badge}
+                  {tabBadges[tab.id]}
                 </span>
               )}
             </button>
