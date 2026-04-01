@@ -156,8 +156,12 @@ function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden mt-4 pb-4 border-t pt-4"
             style={theme === 'light' ? {
+              background: '#fff',
               borderColor: 'rgba(0,0,0,0.1)',
             } : {
+              background: 'rgba(0,0,0,0.8)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
               borderColor: 'rgba(255,255,255,0.1)',
             }}
           >
