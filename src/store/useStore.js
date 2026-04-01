@@ -8,7 +8,7 @@ export const siteConfig = {
   avatar: '/avatar.jpg',
   
   basicInfo: [
-    { emoji: '🎂', label: '生日', value: '{{生日信息}}' },
+    { emoji: '🎂', label: '生日', value: '2002年2月11日' },
     { emoji: '📏', label: '身高', value: '{{身高信息}}' },
     { emoji: '💼', label: '职业', value: '{{职业信息}}' },
     { emoji: '📍', label: '所在地', value: '{{所在地}}' },

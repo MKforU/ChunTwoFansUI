@@ -1,31 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useStore, siteConfig } from '../store/useStore'
 
 function BirthdayCountdown() {
   const { primaryColor } = useStore()
   const [countdown, setCountdown] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    isToday: false
+    days: 0, hours: 0, minutes: 0, seconds: 0, isToday: false
   })
+  const prevRef = useRef({ days: -1, hours: -1, minutes: -1, seconds: -1 })
 
   useEffect(() => {
     const calculateCountdown = () => {
       const now = new Date()
       const birthday = siteConfig.birthday
       let year = now.getFullYear()
-      
-      // 如果今年的生日已经过了，计算明年的
+
       let nextBirthday = new Date(year, birthday.month - 1, birthday.day)
       if (nextBirthday < now) {
         nextBirthday = new Date(year + 1, birthday.month - 1, birthday.day)
       }
 
       const diff = nextBirthday - now
-      
+
       if (diff <= 0) {
         setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0, isToday: true })
         return
@@ -44,31 +40,30 @@ function BirthdayCountdown() {
     return () => clearInterval(timer)
   }, [])
 
-  const TimeBlock = ({ value, unit }) => {
-    const [prevValue, setPrevValue] = useState(value)
-    const [changed, setChanged] = useState(false)
-
-    if (prevValue !== value) {
-      setPrevValue(value)
-      setChanged(true)
-      // 动画结束后重置
-      setTimeout(() => setChanged(false), 250)
-    }
-
-    return (
-      <div className="flex flex-col items-center">
-        <motion.div
-          animate={changed ? { rotateX: [90, 0], opacity: [0, 1] } : {}}
-          transition={{ duration: 0.25 }}
-          className="text-2xl md:text-3xl font-bold tabular-nums"
-          style={{ color: primaryColor }}
-        >
-          {value}
-        </motion.div>
-        <span className="text-white/60 text-xs mt-1">{unit}</span>
-      </div>
-    )
+  // 对比上一次的值，只有变化时才记录
+  const prev = prevRef.current
+  const changed = {
+    days: prev.days !== countdown.days,
+    hours: prev.hours !== countdown.hours,
+    minutes: prev.minutes !== countdown.minutes,
+    seconds: prev.seconds !== countdown.seconds,
   }
+  prevRef.current = { ...countdown }
+
+  const TimeBlock = ({ value, unit, didChange }) => (
+    <div className="flex flex-col items-center">
+      <motion.div
+        key={didChange ? value : 'static'}
+        animate={didChange ? { rotateX: [90, 0], opacity: [0, 1] } : {}}
+        transition={{ duration: 0.25 }}
+        className="text-2xl md:text-3xl font-bold tabular-nums"
+        style={{ color: primaryColor }}
+      >
+        {value}
+      </motion.div>
+      <span className="text-white/60 text-xs mt-1">{unit}</span>
+    </div>
+  )
 
   if (countdown.isToday) {
     return (
@@ -87,10 +82,10 @@ function BirthdayCountdown() {
         距离下一个生日还有
       </p>
       <div className="flex justify-center gap-4">
-        <TimeBlock value={countdown.days} unit="天" />
-        <TimeBlock value={countdown.hours} unit="时" />
-        <TimeBlock value={countdown.minutes} unit="分" />
-        <TimeBlock value={countdown.seconds} unit="秒" />
+        <TimeBlock value={countdown.days} unit="天" didChange={changed.days} />
+        <TimeBlock value={countdown.hours} unit="时" didChange={changed.hours} />
+        <TimeBlock value={countdown.minutes} unit="分" didChange={changed.minutes} />
+        <TimeBlock value={countdown.seconds} unit="秒" didChange={changed.seconds} />
       </div>
     </div>
   )

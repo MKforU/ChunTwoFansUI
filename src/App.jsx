@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useStore } from './store/useStore'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -14,7 +14,7 @@ function App() {
   const { theme } = useStore()
 
   return (
-    <BrowserRouter basename="/ChunTwoFansUI">
+    <HashRouter basename="/ChunTwoFansUI">
       <div className={`min-h-screen relative ${theme === 'dark' ? 'bg-dark' : 'bg-gray-100'}`}>
         {/* 背景效果 */}
         <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -49,7 +49,7 @@ function App() {
         {/* 页脚 */}
         <Footer />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
