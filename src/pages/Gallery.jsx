@@ -3,14 +3,30 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
 import GlassCard from '../components/GlassCard'
 
-// 示例图片数据（可替换）
-const sampleImages = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  src: `https://picsum.photos/400/${300 + (i % 5) * 100}?random=${i}`,
-  alt: `图片 ${i + 1}`,
-  width: 400,
-  height: 300 + (i % 5) * 100
-}))
+// 图片数据结构 - 支持真实图片原始比例
+// 使用时替换 src 为真实图片路径，浏览器会自动按原始比例渲染
+const sampleImages = [
+  // 示例：真实图片格式
+  // { id: 1, src: '/images/photo1.jpg', alt: '描述' },
+  // { id: 2, src: '/images/photo2.png', alt: '描述' },
+  // 目前使用 picsum 随机图片占位（不同宽高比模拟真实图片）
+  { id: 1, src: 'https://picsum.photos/400/600?random=1', alt: '图片 1' },    // 竖长
+  { id: 2, src: 'https://picsum.photos/400/300?random=2', alt: '图片 2' },    // 横宽
+  { id: 3, src: 'https://picsum.photos/400/400?random=3', alt: '图片 3' },    // 正方形
+  { id: 4, src: 'https://picsum.photos/400/550?random=4', alt: '图片 4' },
+  { id: 5, src: 'https://picsum.photos/400/350?random=5', alt: '图片 5' },
+  { id: 6, src: 'https://picsum.photos/400/700?random=6', alt: '图片 6' },    // 很长的
+  { id: 7, src: 'https://picsum.photos/400/280?random=7', alt: '图片 7' },
+  { id: 8, src: 'https://picsum.photos/400/450?random=8', alt: '图片 8' },
+  { id: 9, src: 'https://picsum.photos/400/380?random=9', alt: '图片 9' },
+  { id: 10, src: 'https://picsum.photos/400/520?random=10', alt: '图片 10' },
+  { id: 11, src: 'https://picsum.photos/400/320?random=11', alt: '图片 11' },
+  { id: 12, src: 'https://picsum.photos/400/480?random=12', alt: '图片 12' },
+  { id: 13, src: 'https://picsum.photos/400/360?random=13', alt: '图片 13' },
+  { id: 14, src: 'https://picsum.photos/400/600?random=14', alt: '图片 14' },
+  { id: 15, src: 'https://picsum.photos/400/290?random=15', alt: '图片 15' },
+  { id: 16, src: 'https://picsum.photos/400/420?random=16', alt: '图片 16' },
+]
 
 function Gallery() {
   const { primaryColor, openImageViewer, closeImageViewer, isImageViewerOpen, images, currentImageIndex, setImageIndex } = useStore()
@@ -73,7 +89,6 @@ function Gallery() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.02 }}
-              className="mb-4"
             >
               <div
                 className="rounded-xl overflow-hidden glass-dark cursor-pointer transition-transform duration-300 hover:scale-[1.02]"

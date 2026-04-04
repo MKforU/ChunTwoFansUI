@@ -203,26 +203,30 @@ body {
 
 /* 瀑布流布局 */
 .masonry-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  columns: 1;
+  column-gap: 1rem;
+}
+
+.masonry-grid > * {
+  break-inside: avoid;
+  margin-bottom: 1rem;
 }
 
 @media (min-width: 640px) {
   .masonry-grid {
-    grid-template-columns: repeat(2, 1fr);
+    columns: 2;
   }
 }
 
 @media (min-width: 1024px) {
   .masonry-grid {
-    grid-template-columns: repeat(3, 1fr);
+    columns: 3;
   }
 }
 
 @media (min-width: 1280px) {
   .masonry-grid {
-    grid-template-columns: repeat(4, 1fr);
+    columns: 4;
   }
 }
 
